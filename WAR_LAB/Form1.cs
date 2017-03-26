@@ -42,7 +42,7 @@ namespace WAR_LAB
                 }
                 catch(FormatException)
                 {
-                    MessageBox.Show("Fill all fields");
+                    MessageBox.Show("Fill up all fields");
                     GameSetupBox();
                 }
             }
