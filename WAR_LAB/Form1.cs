@@ -190,19 +190,6 @@ namespace WAR_LAB
                 {
                     NewGame();
                 }
-                else
-                {
-                    DialogResult result2;
-                    string message2 = "Do you wanna close?";
-                    // Displays the MessageBox.
-
-                    result2 = MessageBox.Show(this, message2, caption, buttons);
-
-                    if (result2 == DialogResult.Yes)
-                    {
-                        Close();
-                    }
-                }
             }
             
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
