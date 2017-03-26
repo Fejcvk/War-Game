@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WAR_LAB;
 
 namespace WAR_LAB
 {
@@ -17,10 +18,9 @@ namespace WAR_LAB
         int _playerScore = 0;
         int _opponentScore = 0;
         int _maxRounds = 0;
-        
-        bool _playerWon = false;
-
-        private void GameSetupBox()
+        bool _playerWon = true;
+        bool _firstLaunch = true;
+        public void GameSetupBox()
         {
             var setupBox = new Form2();
             string PlayerName ="";
@@ -48,7 +48,7 @@ namespace WAR_LAB
             }
             else
             {
-                setupBox.Close();
+                setupBox.Dispose();
             }
             FirstGame(PlayerName, OpponentName, rounds);
             setupBox.Dispose();
@@ -171,7 +171,7 @@ namespace WAR_LAB
                 }
                 string message = null;
 
-                if (_playerWon)
+                if(_playerWon)
                 {
                     message = "You won! Wanna play again ?";
                 }
@@ -189,6 +189,10 @@ namespace WAR_LAB
                 if (result == DialogResult.Yes)
                 {
                     NewGame();
+                }
+                else
+                {
+                    PlayerButton.Enabled = false; ;
                 }
             }
             
@@ -213,18 +217,21 @@ namespace WAR_LAB
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
-
-            if (e.CloseReason == CloseReason.WindowsShutDown) return;
-
-            // Confirm user wants to close
-            switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo))
+            if(!_firstLaunch)
             {
-                case DialogResult.No:
-                    e.Cancel = true;
-                    break;
-                default:
-                    break;
+                base.OnFormClosing(e);
+
+                if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+                // Confirm user wants to close
+                switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo))
+                {
+                    case DialogResult.No:
+                        e.Cancel = true;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

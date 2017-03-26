@@ -113,6 +113,8 @@ namespace WAR_LAB
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form2";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Form2";
             this.ResumeLayout(false);
             this.PerformLayout();
