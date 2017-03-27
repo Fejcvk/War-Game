@@ -13,6 +13,7 @@ namespace WAR_LAB
     public partial class Form2 : Form
     {
         bool _firstLaunch = true;
+
         public Form2()
         {
             InitializeComponent();
@@ -33,23 +34,9 @@ namespace WAR_LAB
             return RoundBox.Text;
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        public int getSets()
         {
-            if (_firstLaunch)
-            {
-                base.OnFormClosing(e);
-
-                if (e.CloseReason == CloseReason.WindowsShutDown) return;
-
-                // Confirm user wants to close
-                DialogResult result = MessageBox.Show(this, "Are you sure you want to close?", "Close", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    Application.ExitThread();
-                }
-
-            }
-            _firstLaunch = false;
+            return int.Parse(SetBox.Text);
         }
     }
 }
