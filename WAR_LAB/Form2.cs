@@ -12,13 +12,22 @@ namespace WAR_LAB
 {
     public partial class Form2 : Form
     {
-        bool _firstLaunch = true;
 
         public Form2()
         {
             InitializeComponent();
+            FormClosing += new FormClosingEventHandler(OnClosing);
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
+        private DialogResult showCloseDialog()
+        {
+            return MessageBox.Show("Close app?", "Closing", MessageBoxButtons.YesNo);
+        }
+        private void OnClosing(Object sender, FormClosingEventArgs args)
+        {
+            ;
+        }
         public string getPlayerName()
         {
             return PlayerBox.Text;

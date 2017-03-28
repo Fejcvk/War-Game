@@ -9,6 +9,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WAR_LAB;
 
+
+/*
+ * TODO : 
+ * 1. Zamykac sie za pierwszym razem odpalania setupboxa
+ * 2. Szkalowanie okna +/-
+ * 3. Zapisywanie do statystyk
+ * 4. Autoplay speed can be changed during the game
+ * 5. Trzeba zamknac postgame stats zeby wrocic do gry
+ * 6. Cale wyswietlanie HS -> pojebane gówno
+ * 7. Save/Load
+*/
+
 namespace WAR_LAB
 {
     public partial class Form1 : Form
@@ -17,21 +29,20 @@ namespace WAR_LAB
         bool _stopAutoplay = true;
         private static System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
         readonly Random random = new Random();
-        int _roundCounter = 0;
+        public void GameState() { }
+        int _roundCounter = 1;
         int _playerScore = 10;
         int _opponentScore = 10;
         int _maxRounds = 0;
         bool _playerWon = false;
-        bool _firstLaunch = true;
         private bool _autoPlayOn = false;
-        bool _warIsOver = false;
         int _setAmount = 2;
         private int _cardAmount = 0;
         private Queue<int> PlayerSet = new Queue<int>();
         private Queue<int> OpponentSet = new Queue<int>();
         private List<int> GameDeck = new List<int>();
-
-
+        public Dictionary<double, double> PlayerRoundDictionary = new Dictionary<double, double>();
+        public Dictionary<double, double> CPURoundDictionary = new Dictionary<double, double>();
         //whole behaviour of setup box
         public void GameSetupBox()
         {
@@ -67,11 +78,11 @@ namespace WAR_LAB
             FirstGame(PlayerName, OpponentName, rounds);
             setupBox.Dispose();
         }
-
         public Form1()
         {
             InitializeComponent();
             GameSetupBox();
+            FormClosing += new FormClosingEventHandler(OnClosing);
         }
         //function fill main deck and then divide cards into players queues
         public void FillDecksWithCards(Queue<int> queue, Queue<int> queue2)
@@ -119,7 +130,7 @@ namespace WAR_LAB
 
         }
         //setup newgame
-        private void NewGame()
+        public void NewGame()
         {
             _roundCounter = 0;
             _playerScore = 10;
@@ -136,6 +147,8 @@ namespace WAR_LAB
             PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
             myTimer.Stop();
             StartAutoplayButton.Text = "Start";
+            PlayerRoundDictionary.Clear();
+            CPURoundDictionary.Clear();
         }
         //menaging Autoplay
         private void Autoplay()
@@ -220,7 +233,6 @@ namespace WAR_LAB
             PlayerScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
             OponnentScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
         }
-
         //set right png to given value
         private void SetNumberPicture(Button button, int index)
         {
@@ -243,39 +255,41 @@ namespace WAR_LAB
             GameSetupBox();
         }
         //game logic
-        private void GameEngine(Queue<int> playerDeck, Queue<int>cpuDeck)
+        public void GameEngine(Queue<int> playerDeck, Queue<int>cpuDeck)
         {
             //get player number out of queue
-            int PlayerScoreValue = playerDeck.Dequeue();
+            int playerScoreValue = playerDeck.Dequeue();
             //set right png
-            SetNumberPicture(PlayerScoreButton, PlayerScoreValue);
+            SetNumberPicture(PlayerScoreButton, playerScoreValue);
+            //place round and score in player dictionary
+            PlayerRoundDictionary.Add((double)_roundCounter,(double) _playerScore);
             //get cpu number out of queue
             int OponnentScoreValue = cpuDeck.Dequeue();
             //set right png
             SetNumberPicture(OponnentScoreButton, OponnentScoreValue);
+            //to samo co wyzej ze slownikiem
+            CPURoundDictionary.Add((double)_roundCounter, (double)_opponentScore);
             //player has bigger number
-            if (PlayerScoreValue > OponnentScoreValue)
+            if (playerScoreValue > OponnentScoreValue)
             {
-                PlayerWonRound(PlayerScoreValue, OponnentScoreValue);
+                PlayerWonRound(playerScoreValue, OponnentScoreValue);
             }
             //Opp has bigger number
-            else if (PlayerScoreValue < OponnentScoreValue)
+            else if (playerScoreValue < OponnentScoreValue)
             {
-                CpuWonRound(PlayerScoreValue, OponnentScoreValue);
+                CpuWonRound(playerScoreValue, OponnentScoreValue);
             }
             //Tie
-            else if(PlayerScoreValue == OponnentScoreValue)
+            else if(playerScoreValue == OponnentScoreValue)
             {
                 Tie();
             }
             //Game finished by number of Rounds or one of player run out of cards
-            if (_roundCounter > _maxRounds|| PlayerSet.Count == 0 || OpponentSet.Count == 0)
+            if (_roundCounter == _maxRounds|| PlayerSet.Count == 0 || OpponentSet.Count == 0)
             {
                 PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
                 PlayerScoreButton.BackColor = OponnentScoreButton.BackColor = Color.Empty;
                 bool isTie = false;
-                if (PlayerScoreValue == OponnentScoreValue)
-                    Tie();
                 if (_playerScore > _opponentScore)
                 {
                     _playerWon = true;
@@ -284,18 +298,19 @@ namespace WAR_LAB
                 {
                     isTie = true;
                 }
+
                 string message = null;
                 if (isTie)
                 {
-                    message = "It's a tie! Wanna play again ?";
+                    message = "It's a tie! Wanna see postgame statistic ?";
                 }
                 if (_playerWon)
                 {
-                    message = "You won! Wanna play again ?";
+                    message = "You won! see postgame statistic ?";
                 }
                 else
                 {
-                    message = "You lost! Wanna play again?";
+                    message = "You lost! see postgame statistic ?";
                 }
                 string caption = "The end";
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -306,9 +321,29 @@ namespace WAR_LAB
 
                 if (result == DialogResult.Yes)
                 {
-                    NewGame();
+                    var chart = new Form4(this);
+                    chart.Show();
+                }
+                else
+                {
+                    DialogResult res = MessageBox.Show(this, "Wanna start a new game", "Restart?", buttons);
+
+                    if (res == DialogResult.Yes)
+                    {
+                        NewGame();
+                    }
+                    else
+                    {
+                        var dialogResult = showCloseDialog();
+                        if (dialogResult == DialogResult.OK)
+                        {
+                            myTimer.Tick -= TimerEventProcessor;
+                            Application.Exit();
+                        }
+                    }
                 }
             }
+            _roundCounter += 1;
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
             PlayerScoreLabel.Text = _playerScore.ToString();
             OponnentScoreLabel.Text = _opponentScore.ToString();
@@ -316,30 +351,28 @@ namespace WAR_LAB
         //player button behaviour
         private void PlayerController_Click(object sender, EventArgs e)
         {
-            _roundCounter += 1;
             GameEngine(PlayerSet, OpponentSet);
         }
-
+        private DialogResult showCloseDialog()
+        {
+            return MessageBox.Show("Close app?", "Closing", MessageBoxButtons.YesNo);
+        }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        private void OnClosing(Object sender, FormClosingEventArgs args)
         {
-            base.OnFormClosing(e);
-
-            if (e.CloseReason == CloseReason.WindowsShutDown) return;
-
-            // Confirm user wants to close
-            switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo))
+            var dialogResult = showCloseDialog();
+            if (dialogResult == DialogResult.Yes)
             {
-                case DialogResult.No:
-                    e.Cancel = true;
-                    break;
-                default:
-                    break;
+                myTimer.Tick -= TimerEventProcessor;
             }
+            else
+            {
+                args.Cancel = true;
+            }
+
         }
         //changing text of StartAutoplayButton on mouse click
         private void StartAutoplayButton_MouseClick(object sender, MouseEventArgs e)
@@ -360,6 +393,12 @@ namespace WAR_LAB
                 setLastRound();
                 Autoplay();
             }
+        }
+
+        private void HighscoreButton_Click(object sender, EventArgs e)
+        {
+            Form3 highscores = new Form3();
+            highscores.Show();
         }
     }
 } 
