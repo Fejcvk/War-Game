@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using WAR_LAB;
-
+using Newtonsoft.Json;
+using WAR_LAB.Properties;
 
 /*
  * TODO : 
@@ -17,7 +14,6 @@ using WAR_LAB;
  * 4. Autoplay speed can be changed during the game
  * 5. Trzeba zamknac postgame stats zeby wrocic do gry
  * 6. Cale wyswietlanie HS -> pojebane gówno
- * 7. Save/Load
 */
 
 namespace WAR_LAB
@@ -26,22 +22,22 @@ namespace WAR_LAB
     {
         //some global variables
         bool _stopAutoplay = true;
-        private static System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
+        private static Timer myTimer = new Timer();
         readonly Random random = new Random();
-        public void GameState() { }
         int _roundCounter = 1;
         int _playerScore = 10;
         int _opponentScore = 10;
-        int _maxRounds = 0;
-        bool _playerWon = false;
+        int _maxRounds;
+        bool _playerWon;
         private bool _autoPlayOn = false;
         int _setAmount = 2;
-        private int _cardAmount = 0;
+        private int _cardAmount;
         private Queue<int> PlayerSet = new Queue<int>();
         private Queue<int> OpponentSet = new Queue<int>();
         private List<int> GameDeck = new List<int>();
         public Dictionary<double, double> PlayerRoundDictionary = new Dictionary<double, double>();
         public Dictionary<double, double> CPURoundDictionary = new Dictionary<double, double>();
+        public GameState CurrentGameState;
         //whole behaviour of setup box
         public void GameSetupBox()
         {
@@ -81,7 +77,7 @@ namespace WAR_LAB
         {
             InitializeComponent();
             GameSetupBox();
-            FormClosing += new FormClosingEventHandler(OnClosing);
+            FormClosing += OnClosing;
         }
         //function fill main deck and then divide cards into players queues
         public void FillDecksWithCards(Queue<int> queue, Queue<int> queue2)
@@ -93,6 +89,7 @@ namespace WAR_LAB
                 {
                     GameDeck.Add(j);
                 }
+                CurrentGameState.Deck = GameDeck;
             }
             //while list containing all set of cards is non empty pick two random indices
             //and enqueue them into the players queue's
@@ -105,49 +102,86 @@ namespace WAR_LAB
                 queue2.Enqueue(GameDeck.ElementAt(randomixd2));
                 GameDeck.RemoveAt(randomixd2);
             }
+            CurrentGameState.PlayerDeck = queue;
+            CurrentGameState.OppDeck = queue2;
         }
         //setup first game
         private void FirstGame(string _PlayerName, string _OppName, int Rounds)
         {
-            PlayerNameLabel.Text = _PlayerName;
-            OpponentName.Text = _OppName;
+            CurrentGameState = new GameState();
+            CurrentGameState.PlayerName=PlayerNameLabel.Text = _PlayerName;
+            CurrentGameState.OppName=OpponentName.Text = _OppName;
             PlayerScoreTag.Text = _PlayerName + " points ";
             OpponentScoreTag.Text = _OppName + " points ";
-            _maxRounds = Rounds;
-            _playerScore = 10;
-            _opponentScore = 10;
+            CurrentGameState.roundNumber = _roundCounter;
+            CurrentGameState.maxRounds =_maxRounds = Rounds;
+            CurrentGameState.playerScore =_playerScore = 10;
+            CurrentGameState.oppScore =_opponentScore = 10;
             _cardAmount = 10 * _setAmount;
-            PlayerScoreButton.Text = "";
+            CurrentGameState.Deck = GameDeck;
             PlayerScoreLabel.Text = "10";
-            OponnentScoreButton.Text = "";
             OponnentScoreLabel.Text = "10";
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
-            PlayerScoreButton.BackColor = System.Drawing.Color.Empty;
-            OponnentScoreButton.BackColor = System.Drawing.Color.Empty;
+            PlayerScoreButton.BackColor = Color.Empty;
+            OponnentScoreButton.BackColor = Color.Empty;
             FillDecksWithCards(PlayerSet, OpponentSet);
+            CurrentGameState.OppDeck = OpponentSet;
+            CurrentGameState.PlayerDeck = PlayerSet;
+            CurrentGameState.PlayerDic = PlayerRoundDictionary;
+            CurrentGameState.OppDic = CPURoundDictionary;
             PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
 
         }
         //setup newgame
         public void NewGame()
         {
-            _roundCounter = 0;
-            _playerScore = 10;
-            _opponentScore = 10;
+            
+            CurrentGameState.roundNumber = _roundCounter = 0;
+            CurrentGameState.playerScore = _playerScore = 10;
+            CurrentGameState.oppScore = _opponentScore = 10;
             _cardAmount = 10 * _setAmount;
-            PlayerScoreButton.Text = "";
             PlayerScoreLabel.Text = "10";
-            OponnentScoreButton.Text = "";
             OponnentScoreLabel.Text = "10";
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
-            PlayerScoreButton.BackColor = System.Drawing.Color.Empty;
-            OponnentScoreButton.BackColor = System.Drawing.Color.Empty;
+            PlayerScoreButton.BackColor = Color.Empty;
+            OponnentScoreButton.BackColor = Color.Empty;
             FillDecksWithCards(PlayerSet, OpponentSet);
             PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
             myTimer.Stop();
             StartAutoplayButton.Text = "Start";
             PlayerRoundDictionary.Clear();
             CPURoundDictionary.Clear();
+            CurrentGameState.OppDeck = OpponentSet;
+            CurrentGameState.PlayerDeck = PlayerSet;
+            CurrentGameState.PlayerDic = PlayerRoundDictionary;
+            CurrentGameState.OppDic = CPURoundDictionary;
+        }
+        //setup loadgame
+        public void LoadGame(string playerName, string oppName, 
+            int playerScore, int oppScore,int roundCounter, int maxRound, 
+            Queue<int> playerSet, Queue<int> oppSet, List<int> deck, 
+            Dictionary<double, double> playerDic, Dictionary<double, double> oppDic)
+        {
+            PlayerNameLabel.Text = playerName;
+            OpponentName.Text = oppName;
+            _playerScore = playerScore;
+            _opponentScore = oppScore;
+            _roundCounter = roundCounter;
+            _maxRounds = maxRound;
+            PlayerSet = playerSet;
+            OpponentSet = oppSet;
+            GameDeck = deck;
+            PlayerRoundDictionary.Clear();
+            CPURoundDictionary.Clear();
+            PlayerRoundDictionary = playerDic;
+            CPURoundDictionary = oppDic;
+
+            PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
+            PlayerScoreButton.BackColor = Color.Empty;
+            OponnentScoreButton.BackColor = Color.Empty;
+            PlayerScoreLabel.Text = playerScore.ToString();
+            OponnentScoreLabel.Text = oppScore.ToString();
+            RoundCounter.Text = "Round " + roundCounter + " of " + maxRound;
         }
         //menaging Autoplay
         private void Autoplay()
@@ -176,7 +210,7 @@ namespace WAR_LAB
 
         private void TimerEventProcessor(Object o, EventArgs e)
         {
-            if (_roundCounter > _maxRounds || PlayerSet.Count == 0 || OpponentSet.Count == 0 || _stopAutoplay == true)
+            if (_roundCounter > _maxRounds || PlayerSet.Count == 0 || OpponentSet.Count == 0 || _stopAutoplay)
                 return;
             PlayerButton.PerformClick();
         }
@@ -201,34 +235,40 @@ namespace WAR_LAB
 
             if (result == DialogResult.Yes)
             {
-                return;
             }
         }
         //player won round
         private void PlayerWonRound(int playerScore, int _cpuScore)
         {
-            _playerScore += 1;
-            _opponentScore -= 1;
-            PlayerScoreButton.BackColor = System.Drawing.Color.Green;
-            OponnentScoreButton.BackColor = System.Drawing.Color.Red;
+            CurrentGameState.playerScore = _playerScore += 1;
+            CurrentGameState.oppScore = _opponentScore -= 1;
+            PlayerScoreButton.BackColor = Color.Green;
+            OponnentScoreButton.BackColor = Color.Red;
             PlayerSet.Enqueue(playerScore);
             PlayerSet.Enqueue(_cpuScore);
+            CurrentGameState.PlayerDeck.Enqueue(playerScore);
+            CurrentGameState.PlayerDeck.Enqueue(_cpuScore);
         }
         //cpu won round
         private void CpuWonRound(int playerScore, int _cpuScore)
         {
-            _opponentScore += 1;
-            _playerScore -= 1;
-            PlayerScoreButton.BackColor = System.Drawing.Color.Red;
-            OponnentScoreButton.BackColor = System.Drawing.Color.Green;
+            CurrentGameState.oppScore = _opponentScore += 1;
+            CurrentGameState.playerScore = _playerScore -= 1;
+            PlayerScoreButton.BackColor = Color.Red;
+            OponnentScoreButton.BackColor = Color.Green;
             OpponentSet.Enqueue(playerScore);
             OpponentSet.Enqueue(_cpuScore);
+            CurrentGameState.OppDeck.Enqueue(playerScore);
+            CurrentGameState.OppDeck.Enqueue(_cpuScore);
         }
         //tie situation solution
         private void Tie()
         {
+            CurrentGameState.roundNumber = _roundCounter -= 1;
             PlayerSet.Dequeue();
+            CurrentGameState.PlayerDeck.Dequeue();
             OpponentSet.Dequeue();
+            CurrentGameState.OppDeck.Dequeue();
             PlayerScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
             OponnentScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
         }
@@ -237,7 +277,7 @@ namespace WAR_LAB
         {
             Rectangle section = new Rectangle(100 * (index - 1), 0, 100, 147);
 
-            Bitmap src = Properties.Resources.numerki1;
+            Bitmap src = Resources.numerki1;
             Bitmap target = new Bitmap(section.Width, section.Height);
 
             using (Graphics g = Graphics.FromImage(target))
@@ -251,7 +291,7 @@ namespace WAR_LAB
         //dropdown menu
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GameSetupBox();
+            NewGame();
         }
         //game logic
         public void GameEngine(Queue<int> playerDeck, Queue<int>cpuDeck)
@@ -261,13 +301,13 @@ namespace WAR_LAB
             //set right png
             SetNumberPicture(PlayerScoreButton, playerScoreValue);
             //place round and score in player dictionary
-            PlayerRoundDictionary.Add((double)_roundCounter,(double) _playerScore);
+            PlayerRoundDictionary.Add(_roundCounter,_playerScore);
             //get cpu number out of queue
             int OponnentScoreValue = cpuDeck.Dequeue();
             //set right png
             SetNumberPicture(OponnentScoreButton, OponnentScoreValue);
             //to samo co wyzej ze slownikiem
-            CPURoundDictionary.Add((double)_roundCounter, (double)_opponentScore);
+            CPURoundDictionary.Add(_roundCounter, _opponentScore);
             //player has bigger number
             if (playerScoreValue > OponnentScoreValue)
             {
@@ -342,7 +382,7 @@ namespace WAR_LAB
                     }
                 }
             }
-            _roundCounter += 1;
+            CurrentGameState.roundNumber = _roundCounter += 1;
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
             PlayerScoreLabel.Text = _playerScore.ToString();
             OponnentScoreLabel.Text = _opponentScore.ToString();
@@ -358,7 +398,7 @@ namespace WAR_LAB
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
         private void OnClosing(Object sender, FormClosingEventArgs args)
         {
@@ -398,6 +438,40 @@ namespace WAR_LAB
         {
             Form3 highscores = new Form3();
             highscores.Show();
+        }
+
+        public class GameState
+        {
+            public int maxRounds;
+            public int roundNumber;
+            public int playerScore;
+            public int oppScore;
+            public string PlayerName;
+            public string OppName;
+            public Queue<int> PlayerDeck;
+            public Queue<int> OppDeck;
+            public List<int> Deck;
+            public Dictionary<double, double> PlayerDic;
+            public Dictionary<double, double> OppDic;
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string gameStateJson = JsonConvert.SerializeObject(CurrentGameState);
+            File.WriteAllText(Environment.CurrentDirectory + @"\gamestate.gs", gameStateJson);
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string gameStateJson = File.ReadAllText(Environment.CurrentDirectory + @"\gamestate.gs");
+            GameState loadedGameState = JsonConvert.DeserializeObject<GameState>(gameStateJson);
+            LoadGameFromSave(loadedGameState);
+        }
+        private void LoadGameFromSave(GameState gameState)
+        {
+            LoadGame(gameState.PlayerName, gameState.OppName, gameState.playerScore, gameState.oppScore,
+                gameState.roundNumber, gameState.maxRounds, gameState.PlayerDeck, gameState.OppDeck, gameState.Deck,
+                gameState.PlayerDic, gameState.OppDic);
         }
     }
 } 
