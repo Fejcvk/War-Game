@@ -14,12 +14,14 @@ namespace WAR_LAB
     public partial class Form1 : Form
     {
         //some global variables
+        bool _stopAutoplay = true;
+        private static System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
         readonly Random random = new Random();
         int _roundCounter = 0;
         int _playerScore = 10;
         int _opponentScore = 10;
         int _maxRounds = 0;
-        bool _playerWon = true;
+        bool _playerWon = false;
         bool _firstLaunch = true;
         private bool _autoPlayOn = false;
         bool _warIsOver = false;
@@ -102,7 +104,6 @@ namespace WAR_LAB
             PlayerScoreTag.Text = _PlayerName + " points ";
             OpponentScoreTag.Text = _OppName + " points ";
             _maxRounds = Rounds;
-            _roundCounter = 0;
             _playerScore = 10;
             _opponentScore = 10;
             _cardAmount = 10 * _setAmount;
@@ -133,18 +134,46 @@ namespace WAR_LAB
             OponnentScoreButton.BackColor = System.Drawing.Color.Empty;
             FillDecksWithCards(PlayerSet, OpponentSet);
             PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
+            myTimer.Stop();
+            StartAutoplayButton.Text = "Start";
+        }
+        //menaging Autoplay
+        private void Autoplay()
+        {
+            StartAutoplay();
 
+            if (_roundCounter > _maxRounds)
+            {
+                myTimer.Stop();
+            }
+            //Game fibished with one of players run out of cards
+            else if (PlayerSet.Count == 0 || OpponentSet.Count == 0)
+            {
+                myTimer.Stop();
+            }
         }
-        //setup new _maxRound baased on input
-        public string getLastRound()
+        //when function is called, starting autoplay
+        private void StartAutoplay()
         {
-            return LastRoundTextbox.Text;
+            myTimer.Tick += TimerEventProcessor;
+
+            //min walrtosc trackbara 1 max 100, ja na max chce miec 10 na min 100 
+            myTimer.Interval = (trackBar1.Maximum - trackBar1.Value )* 10 + 1;
+            myTimer.Start();
         }
-        //function is called while Start button is pushed
-        private void setRoundForAutoplay()
+
+        private void TimerEventProcessor(Object o, EventArgs e)
         {
-            int newMaxRound = int.Parse(getLastRound());
-            _maxRounds = newMaxRound;
+            if (_roundCounter > _maxRounds || PlayerSet.Count == 0 || OpponentSet.Count == 0 || _stopAutoplay == true)
+                return;
+            PlayerButton.PerformClick();
+        }
+        //setup new _maxRound based on input
+        public int setLastRound()
+        {
+            if(LastRoundTextbox.Text != "")
+                return _maxRounds = int.Parse(LastRoundTextbox.Text);
+            return _maxRounds;
         }
         //dropdown menu
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -166,7 +195,6 @@ namespace WAR_LAB
         //player won round
         private void PlayerWonRound(int playerScore, int _cpuScore)
         {
-            _roundCounter += 1;
             _playerScore += 1;
             _opponentScore -= 1;
             PlayerScoreButton.BackColor = System.Drawing.Color.Green;
@@ -177,7 +205,6 @@ namespace WAR_LAB
         //cpu won round
         private void CpuWonRound(int playerScore, int _cpuScore)
         {
-            _roundCounter += 1;
             _opponentScore += 1;
             _playerScore -= 1;
             PlayerScoreButton.BackColor = System.Drawing.Color.Red;
@@ -190,16 +217,10 @@ namespace WAR_LAB
         {
             PlayerSet.Dequeue();
             OpponentSet.Dequeue();
-            War();
-        }
-        //war situation solution
-        private void War()
-        {
             PlayerScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
             OponnentScoreButton.BackgroundImage = PlayerButton.BackgroundImage;
-            int _pScore = PlayerSet.Dequeue();
-            int _oScore = OpponentSet.Dequeue();
         }
+
         //set right png to given value
         private void SetNumberPicture(Button button, int index)
         {
@@ -247,15 +268,27 @@ namespace WAR_LAB
             {
                 Tie();
             }
-            //Game finished by number of Rounds
-            if (_roundCounter > _maxRounds)
+            //Game finished by number of Rounds or one of player run out of cards
+            if (_roundCounter > _maxRounds|| PlayerSet.Count == 0 || OpponentSet.Count == 0)
             {
+                PlayerScoreButton.BackgroundImage = OponnentScoreButton.BackgroundImage = null;
+                PlayerScoreButton.BackColor = OponnentScoreButton.BackColor = Color.Empty;
+                bool isTie = false;
+                if (PlayerScoreValue == OponnentScoreValue)
+                    Tie();
                 if (_playerScore > _opponentScore)
                 {
                     _playerWon = true;
                 }
+                if (_playerScore == _opponentScore)
+                {
+                    isTie = true;
+                }
                 string message = null;
-
+                if (isTie)
+                {
+                    message = "It's a tie! Wanna play again ?";
+                }
                 if (_playerWon)
                 {
                     message = "You won! Wanna play again ?";
@@ -276,36 +309,6 @@ namespace WAR_LAB
                     NewGame();
                 }
             }
-            //Game fibished with one of players run out of cards
-            else if (PlayerSet.Count == 0 || OpponentSet.Count == 0)
-            {
-                if (_playerScore > _opponentScore)
-                {
-                    _playerWon = true;
-                }
-                string message = null;
-
-                if (_playerWon)
-                {
-                    message = "You won! Wanna play again ?";
-                }
-                else
-                {
-                    message = "You lost! Wanna play again?";
-                }
-                string caption = "The end";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result;
-
-                result = MessageBox.Show(this, message, caption, buttons);
-
-
-                if (result == DialogResult.Yes)
-                {
-                    NewGame();
-                }
-            }
-
             RoundCounter.Text = "Round " + _roundCounter + " of " + _maxRounds;
             PlayerScoreLabel.Text = _playerScore.ToString();
             OponnentScoreLabel.Text = _opponentScore.ToString();
@@ -313,7 +316,8 @@ namespace WAR_LAB
         //player button behaviour
         private void PlayerController_Click(object sender, EventArgs e)
         {
-           GameEngine(PlayerSet, OpponentSet);
+            _roundCounter += 1;
+            GameEngine(PlayerSet, OpponentSet);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -335,6 +339,26 @@ namespace WAR_LAB
                     break;
                 default:
                     break;
+            }
+        }
+        //changing text of StartAutoplayButton on mouse click
+        private void StartAutoplayButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (StartAutoplayButton.Text == "Start")
+            {
+                StartAutoplayButton.Text = "Stop";
+                _stopAutoplay = false;
+            }
+            else
+            {
+                StartAutoplayButton.Text = "Start";
+                _stopAutoplay = true;
+            }
+            DialogResult dr = StartAutoplayButton.DialogResult;
+            if (dr == DialogResult.OK)
+            {
+                setLastRound();
+                Autoplay();
             }
         }
     }

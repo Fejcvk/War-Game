@@ -67,8 +67,7 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(1254, 32);
+            this.toolStrip1.Size = new System.Drawing.Size(836, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -84,32 +83,32 @@
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.ShowDropDownArrow = false;
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(62, 29);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(42, 22);
             this.toolStripDropDownButton1.Text = "Game";
             // 
             // newGameToolStripMenuItem
             // 
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(183, 30);
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.newGameToolStripMenuItem.Text = "New Game";
             this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(183, 30);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(183, 30);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.loadToolStripMenuItem.Text = "Load";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(183, 30);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -119,7 +118,7 @@
             this.HighscoreButton.Image = ((System.Drawing.Image)(resources.GetObject("HighscoreButton.Image")));
             this.HighscoreButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.HighscoreButton.Name = "HighscoreButton";
-            this.HighscoreButton.Size = new System.Drawing.Size(104, 29);
+            this.HighscoreButton.Size = new System.Drawing.Size(70, 22);
             this.HighscoreButton.Text = "Highscores";
             this.HighscoreButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -129,7 +128,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(66, 29);
+            this.toolStripButton1.Size = new System.Drawing.Size(44, 22);
             this.toolStripButton1.Text = "About";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -137,10 +136,9 @@
             // 
             this.OponnentButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("OponnentButton.BackgroundImage")));
             this.OponnentButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.OponnentButton.Location = new System.Drawing.Point(13, 134);
-            this.OponnentButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.OponnentButton.Location = new System.Drawing.Point(9, 87);
             this.OponnentButton.Name = "OponnentButton";
-            this.OponnentButton.Size = new System.Drawing.Size(288, 165);
+            this.OponnentButton.Size = new System.Drawing.Size(192, 107);
             this.OponnentButton.TabIndex = 1;
             this.OponnentButton.UseVisualStyleBackColor = true;
             // 
@@ -148,148 +146,147 @@
             // 
             this.PlayerButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PlayerButton.BackgroundImage")));
             this.PlayerButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PlayerButton.Location = new System.Drawing.Point(871, 451);
-            this.PlayerButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PlayerButton.Location = new System.Drawing.Point(581, 293);
             this.PlayerButton.Name = "PlayerButton";
             this.PlayerButton.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.PlayerButton.Size = new System.Drawing.Size(288, 165);
+            this.PlayerButton.Size = new System.Drawing.Size(192, 107);
             this.PlayerButton.TabIndex = 2;
             this.PlayerButton.UseVisualStyleBackColor = true;
             this.PlayerButton.Click += new System.EventHandler(this.PlayerController_Click);
             // 
             // OponnentScoreButton
             // 
-            this.OponnentScoreButton.Location = new System.Drawing.Point(458, 134);
-            this.OponnentScoreButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.OponnentScoreButton.Location = new System.Drawing.Point(305, 87);
             this.OponnentScoreButton.Name = "OponnentScoreButton";
-            this.OponnentScoreButton.Size = new System.Drawing.Size(288, 165);
+            this.OponnentScoreButton.Size = new System.Drawing.Size(192, 107);
             this.OponnentScoreButton.TabIndex = 3;
             this.OponnentScoreButton.UseVisualStyleBackColor = true;
             // 
             // PlayerScoreButton
             // 
-            this.PlayerScoreButton.Location = new System.Drawing.Point(458, 451);
-            this.PlayerScoreButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PlayerScoreButton.Location = new System.Drawing.Point(305, 293);
             this.PlayerScoreButton.Name = "PlayerScoreButton";
-            this.PlayerScoreButton.Size = new System.Drawing.Size(288, 165);
+            this.PlayerScoreButton.Size = new System.Drawing.Size(192, 107);
             this.PlayerScoreButton.TabIndex = 4;
             this.PlayerScoreButton.UseVisualStyleBackColor = true;
             // 
             // OpponentName
             // 
             this.OpponentName.AutoSize = true;
-            this.OpponentName.Location = new System.Drawing.Point(18, 91);
-            this.OpponentName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.OpponentName.Location = new System.Drawing.Point(12, 59);
             this.OpponentName.Name = "OpponentName";
-            this.OpponentName.Size = new System.Drawing.Size(0, 20);
+            this.OpponentName.Size = new System.Drawing.Size(0, 13);
             this.OpponentName.TabIndex = 5;
             // 
             // PlayerScoreLabel
             // 
             this.PlayerScoreLabel.AutoSize = true;
-            this.PlayerScoreLabel.Location = new System.Drawing.Point(117, 523);
-            this.PlayerScoreLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.PlayerScoreLabel.Location = new System.Drawing.Point(78, 340);
             this.PlayerScoreLabel.Name = "PlayerScoreLabel";
-            this.PlayerScoreLabel.Size = new System.Drawing.Size(18, 20);
+            this.PlayerScoreLabel.Size = new System.Drawing.Size(13, 13);
             this.PlayerScoreLabel.TabIndex = 6;
             this.PlayerScoreLabel.Text = "0";
             // 
             // PlayerScoreTag
             // 
             this.PlayerScoreTag.AutoSize = true;
-            this.PlayerScoreTag.Location = new System.Drawing.Point(254, 523);
-            this.PlayerScoreTag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.PlayerScoreTag.Location = new System.Drawing.Point(169, 340);
             this.PlayerScoreTag.Name = "PlayerScoreTag";
-            this.PlayerScoreTag.Size = new System.Drawing.Size(0, 20);
+            this.PlayerScoreTag.Size = new System.Drawing.Size(0, 13);
             this.PlayerScoreTag.TabIndex = 7;
             // 
             // PlayerNameLabel
             // 
             this.PlayerNameLabel.AutoSize = true;
-            this.PlayerNameLabel.Location = new System.Drawing.Point(1107, 669);
-            this.PlayerNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.PlayerNameLabel.Location = new System.Drawing.Point(738, 435);
             this.PlayerNameLabel.Name = "PlayerNameLabel";
-            this.PlayerNameLabel.Size = new System.Drawing.Size(0, 20);
+            this.PlayerNameLabel.Size = new System.Drawing.Size(0, 13);
             this.PlayerNameLabel.TabIndex = 8;
             // 
             // RoundCounter
             // 
             this.RoundCounter.AutoSize = true;
-            this.RoundCounter.Location = new System.Drawing.Point(522, 375);
-            this.RoundCounter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.RoundCounter.Location = new System.Drawing.Point(348, 244);
             this.RoundCounter.Name = "RoundCounter";
-            this.RoundCounter.Size = new System.Drawing.Size(153, 20);
+            this.RoundCounter.Size = new System.Drawing.Size(103, 13);
             this.RoundCounter.TabIndex = 9;
             this.RoundCounter.Text = "Number of rounds: 0";
             // 
             // OpponentScoreTag
             // 
             this.OpponentScoreTag.AutoSize = true;
-            this.OpponentScoreTag.Location = new System.Drawing.Point(867, 206);
-            this.OpponentScoreTag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.OpponentScoreTag.Location = new System.Drawing.Point(578, 134);
             this.OpponentScoreTag.Name = "OpponentScoreTag";
-            this.OpponentScoreTag.Size = new System.Drawing.Size(0, 20);
+            this.OpponentScoreTag.Size = new System.Drawing.Size(0, 13);
             this.OpponentScoreTag.TabIndex = 10;
             // 
             // OponnentScoreLabel
             // 
             this.OponnentScoreLabel.AutoSize = true;
-            this.OponnentScoreLabel.Location = new System.Drawing.Point(988, 206);
-            this.OponnentScoreLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.OponnentScoreLabel.Location = new System.Drawing.Point(659, 134);
             this.OponnentScoreLabel.Name = "OponnentScoreLabel";
-            this.OponnentScoreLabel.Size = new System.Drawing.Size(18, 20);
+            this.OponnentScoreLabel.Size = new System.Drawing.Size(13, 13);
             this.OponnentScoreLabel.TabIndex = 11;
             this.OponnentScoreLabel.Text = "0";
             // 
             // trackBar1
             // 
             this.trackBar1.BackColor = System.Drawing.SystemColors.Control;
-            this.trackBar1.Location = new System.Drawing.Point(13, 651);
+            this.trackBar1.Location = new System.Drawing.Point(9, 423);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.trackBar1.Maximum = 100;
+            this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(1146, 69);
+            this.trackBar1.Size = new System.Drawing.Size(764, 45);
             this.trackBar1.TabIndex = 12;
+            this.trackBar1.Value = 1;
             // 
             // AutoPlayLabel
             // 
             this.AutoPlayLabel.AutoSize = true;
-            this.AutoPlayLabel.Location = new System.Drawing.Point(18, 738);
+            this.AutoPlayLabel.Location = new System.Drawing.Point(12, 480);
+            this.AutoPlayLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.AutoPlayLabel.Name = "AutoPlayLabel";
-            this.AutoPlayLabel.Size = new System.Drawing.Size(134, 20);
+            this.AutoPlayLabel.Size = new System.Drawing.Size(89, 13);
             this.AutoPlayLabel.TabIndex = 13;
             this.AutoPlayLabel.Text = "Autoplay Settings";
             // 
             // LastRoundLabel
             // 
             this.LastRoundLabel.AutoSize = true;
-            this.LastRoundLabel.Location = new System.Drawing.Point(454, 738);
+            this.LastRoundLabel.Location = new System.Drawing.Point(303, 480);
+            this.LastRoundLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LastRoundLabel.Name = "LastRoundLabel";
-            this.LastRoundLabel.Size = new System.Drawing.Size(92, 20);
+            this.LastRoundLabel.Size = new System.Drawing.Size(62, 13);
             this.LastRoundLabel.TabIndex = 14;
             this.LastRoundLabel.Text = "Last Round";
             // 
             // LastRoundTextbox
             // 
-            this.LastRoundTextbox.Location = new System.Drawing.Point(566, 732);
+            this.LastRoundTextbox.Location = new System.Drawing.Point(377, 476);
+            this.LastRoundTextbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.LastRoundTextbox.Name = "LastRoundTextbox";
-            this.LastRoundTextbox.Size = new System.Drawing.Size(180, 26);
+            this.LastRoundTextbox.Size = new System.Drawing.Size(121, 20);
             this.LastRoundTextbox.TabIndex = 15;
             // 
             // StartAutoplayButton
             // 
-            this.StartAutoplayButton.Location = new System.Drawing.Point(1064, 726);
+            this.StartAutoplayButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.StartAutoplayButton.Location = new System.Drawing.Point(709, 472);
+            this.StartAutoplayButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.StartAutoplayButton.Name = "StartAutoplayButton";
-            this.StartAutoplayButton.Size = new System.Drawing.Size(95, 32);
+            this.StartAutoplayButton.Size = new System.Drawing.Size(63, 21);
             this.StartAutoplayButton.TabIndex = 16;
             this.StartAutoplayButton.Text = "Start";
             this.StartAutoplayButton.UseVisualStyleBackColor = true;
+            this.StartAutoplayButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.StartAutoplayButton_MouseClick);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1254, 802);
+            this.ClientSize = new System.Drawing.Size(836, 521);
             this.Controls.Add(this.StartAutoplayButton);
             this.Controls.Add(this.LastRoundTextbox);
             this.Controls.Add(this.LastRoundLabel);
@@ -308,8 +305,7 @@
             this.Controls.Add(this.OponnentButton);
             this.Controls.Add(this.toolStrip1);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(1200, 786);
+            this.MinimumSize = new System.Drawing.Size(805, 525);
             this.Name = "Form1";
             this.Text = "Form1";
             this.toolStrip1.ResumeLayout(false);
