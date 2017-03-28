@@ -13,7 +13,6 @@ using WAR_LAB;
 /*
  * TODO : 
  * 1. Zamykac sie za pierwszym razem odpalania setupboxa
- * 2. Szkalowanie okna +/-
  * 3. Zapisywanie do statystyk
  * 4. Autoplay speed can be changed during the game
  * 5. Trzeba zamknac postgame stats zeby wrocic do gry
